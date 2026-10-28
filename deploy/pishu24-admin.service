@@ -1,0 +1,34 @@
+[Unit]
+Description=Pishu24 Admin Web Panel
+After=network.target pishu24-bot.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=bot
+Group=bot
+WorkingDirectory=/home/bot/Bot_bid_univer
+EnvironmentFile=/home/bot/Bot_bid_univer/.env
+ExecStart=/home/bot/Bot_bid_univer/.venv/bin/uvicorn web.main:app --host 127.0.0.1 --port 8081 --workers 1 --proxy-headers --forwarded-allow-ips=127.0.0.1
+Restart=always
+RestartSec=10
+
+# Sandboxing — минимум прав
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/home/bot/Bot_bid_univer
+ProtectHome=read-only
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictRealtime=true
+LockPersonality=true
+
+# Логирование
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pishu24-admin
+
+[Install]
+WantedBy=multi-user.target

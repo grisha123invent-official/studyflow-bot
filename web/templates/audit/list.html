@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Журнал · {{ brand_name }}{% endblock %}
+
+{% block content %}
+
+<div class="bg-white rounded-lg border border-slate-200 shadow-card p-4 mb-6">
+    <div class="flex items-center gap-2 mb-3">
+        <i data-lucide="shield" class="w-4 h-4 text-gold-dark"></i>
+        <span class="text-sm text-slate-600">Все действия в админ-панели и попытки входа логируются здесь.</span>
+    </div>
+    {% if action_counts %}
+    <div class="flex flex-wrap gap-1.5">
+        <a href="/admin/audit" class="px-2.5 py-1 rounded-full text-xs {% if not action %}bg-navy text-white{% else %}bg-slate-100 text-slate-600 hover:bg-slate-200{% endif %}">Все</a>
+        {% for a, cnt in action_counts %}
+        <a href="/admin/audit?action={{ a }}"
+           class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs
+                  {% if action == a %}bg-navy text-white{% else %}bg-slate-100 text-slate-600 hover:bg-slate-200{% endif %}">
+            {{ a }} <span class="text-[10px] opacity-70">{{ cnt }}</span>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+{% if logs %}
+<div class="bg-white rounded-lg border border-slate-200 shadow-card overflow-hidden">
+    <table class="w-full text-sm table-zebra">
+        <thead class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+            <tr>
+                <th class="text-left px-4 py-3 font-medium">Время</th>
+                <th class="text-left px-4 py-3 font-medium">Админ TG</th>
+                <th class="text-left px-4 py-3 font-medium">Действие</th>
+                <th class="text-left px-4 py-3 font-medium">Объект</th>
+                <th class="text-left px-4 py-3 font-medium">IP</th>
+                <th class="text-left px-4 py-3 font-medium">Детали</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for l in logs %}
+            {% set is_auth_fail = 'unauthorized' in l.action or 'failed' in l.action %}
+            <tr class="border-t border-slate-100 hover:bg-cream/40 transition-colors {% if is_auth_fail %}bg-rose-50/30{% endif %}">
+                <td class="px-4 py-3 text-xs text-slate-500 whitespace-nowrap font-mono">{{ l.created_at.strftime('%d.%m %H:%M:%S') if l.created_at else '—' }}</td>
+                <td class="px-4 py-3 text-xs font-mono">{{ l.admin_tg_id or '—' }}</td>
+                <td class="px-4 py-3">
+                    <span class="inline-block px-2 py-0.5 rounded text-xs
+                                 {% if is_auth_fail %}bg-rose-100 text-rose-700
+                                 {% elif 'login' in l.action %}bg-emerald-100 text-emerald-700
+                                 {% else %}bg-sky-100 text-sky-700{% endif %}">
+                        {{ l.action }}
+                    </span>
+                </td>
+                <td class="px-4 py-3 text-xs text-slate-600">
+                    {% if l.target_type %}{{ l.target_type }}:{{ l.target_id or '—' }}{% else %}<span class="text-slate-300">—</span>{% endif %}
+                </td>
+                <td class="px-4 py-3 text-xs font-mono text-slate-500">{{ l.ip_address or '—' }}</td>
+                <td class="px-4 py-3 text-xs text-slate-500 max-w-md truncate">{{ l.details or '' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if total_pages > 1 %}
+    <div class="flex items-center justify-between px-4 py-3 border-t border-slate-100 bg-slate-50/50">
+        <div class="text-xs text-slate-500">Стр. {{ page }} из {{ total_pages }}</div>
+        <div class="flex gap-1">
+            {% set base = '/admin/audit?' ~ ('action=' ~ action ~ '&' if action else '') %}
+            {% if page > 1 %}<a href="{{ base }}page={{ page-1 }}" class="px-3 py-1.5 text-xs border border-slate-200 rounded-md hover:bg-white">← Назад</a>{% endif %}
+            {% if page < total_pages %}<a href="{{ base }}page={{ page+1 }}" class="px-3 py-1.5 text-xs border border-slate-200 rounded-md hover:bg-white">Вперёд →</a>{% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% else %}
+<div class="bg-white rounded-lg border border-slate-200 shadow-card p-12 text-center">
+    <i data-lucide="shield" class="w-10 h-10 mx-auto text-slate-300 mb-3"></i>
+    <p class="text-slate-500">Журнал пуст</p>
+</div>
+{% endif %}
+
+{% endblock %}

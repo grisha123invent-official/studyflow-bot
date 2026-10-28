@@ -1,0 +1,32 @@
+# Секреты и окружение
+.env
+.env.*
+!.env.example
+
+# База данных и загрузки клиентов
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+data/
+uploads/
+backups/
+deploy_backups/
+
+# Виртуальные окружения и кэш Python
+.venv/
+venv/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE и ОС
+.idea/
+.vscode/
+.claude/
+.DS_Store
+Thumbs.db

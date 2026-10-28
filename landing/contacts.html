@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты — {{ brand_name }}</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container legal">
+        <a href="/" class="back">← На главную</a>
+        <h1>Контакты</h1>
+
+        <h2>Исполнитель</h2>
+        <p>
+            Самозанятый <strong>{{ owner_name }}</strong><br>
+            ИНН: <strong>{{ owner_inn }}</strong><br>
+            ОКВЭД 85.41.9 — Образование дополнительное прочее<br>
+            Применяет специальный налоговый режим «Налог на профессиональный доход» (НПД)
+        </p>
+
+        <h2>Связь</h2>
+        <p>
+            🤖 <strong>Telegram-бот для заказов:</strong> <a href="https://t.me/{{ bot_username }}">@{{ bot_username }}</a><br>
+            ✉️ <strong>Email поддержки:</strong> <a href="mailto:{{ support_email }}">{{ support_email }}</a><br>
+            🔒 <strong>По вопросам персональных данных:</strong> <a href="mailto:{{ support_email }}">{{ support_email }}</a>
+        </p>
+
+        <h2>Часы работы</h2>
+        <p>Заявки принимаются <strong>24/7</strong> через Telegram-бот. Ответ на бриф — в течение 1–24 часов.</p>
+
+        <h2>Реквизиты для оплаты</h2>
+        <p>Оплата производится только по защищённой платёжной ссылке (Робокасса / СБП / банковские карты), которая приходит в бот после просмотра превью с водяным знаком.</p>
+
+        <h2>Документы</h2>
+        <ul>
+            <li><a href="/oferta">Публичная оферта</a></li>
+            <li><a href="/privacy">Политика конфиденциальности</a></li>
+        </ul>
+    </div>
+</body>
+</html>

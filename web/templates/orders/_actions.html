@@ -1,0 +1,128 @@
+{# Формы действий по заказу — рендерятся в зависимости от order.status #}
+<div class="bg-white rounded-lg border border-slate-200 shadow-card p-5">
+    <h2 class="font-serif text-lg text-navy mb-4 flex items-center gap-2">
+        <i data-lucide="zap" class="w-4 h-4 text-gold-dark"></i> Действия
+    </h2>
+
+    {% if order.status == 'PENDING' %}
+    {# ─── Принять ─── #}
+    <form action="/admin/orders/{{ order.id }}/accept" method="post" class="mb-3">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button type="submit"
+                class="w-full px-4 py-2.5 text-sm font-medium bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors cursor-pointer flex items-center justify-center gap-2">
+            <i data-lucide="check" class="w-4 h-4"></i> Принять заказ
+        </button>
+    </form>
+
+    {# ─── Изменить цену ─── #}
+    <details class="mb-3 group">
+        <summary class="cursor-pointer px-4 py-2.5 text-sm font-medium bg-cream text-gold-dark rounded-md hover:bg-amber-100 transition-colors flex items-center justify-center gap-2 select-none">
+            <i data-lucide="coins" class="w-4 h-4"></i> Изменить цену
+        </summary>
+        <form action="/admin/orders/{{ order.id }}/change-price" method="post" class="mt-2 p-3 bg-slate-50 rounded-md">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="number" name="new_price" step="1" min="1" max="1000000" required
+                   value="{{ '%.0f'|format(order.price) if order.price else '' }}"
+                   class="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:border-gold focus:outline-none mb-2">
+            <button type="submit"
+                    class="w-full px-3 py-2 text-xs font-medium bg-navy text-white rounded-md hover:bg-navy-light transition-colors cursor-pointer">
+                Обновить и уведомить
+            </button>
+        </form>
+    </details>
+
+    {# ─── Отклонить ─── #}
+    <details class="group">
+        <summary class="cursor-pointer px-4 py-2.5 text-sm font-medium bg-rose-50 text-rose-700 rounded-md hover:bg-rose-100 transition-colors flex items-center justify-center gap-2 select-none">
+            <i data-lucide="x" class="w-4 h-4"></i> Отклонить
+        </summary>
+        <form action="/admin/orders/{{ order.id }}/reject" method="post" class="mt-2 p-3 bg-rose-50/50 rounded-md">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <textarea name="reason" rows="3" required minlength="3"
+                      placeholder="Причина (минимум 3 символа)…"
+                      class="w-full px-3 py-2 text-sm border border-rose-200 rounded-md focus:border-rose-500 focus:outline-none mb-2"></textarea>
+            <button type="submit"
+                    onclick="return confirm('Точно отклонить заказ #{{ order.id }}?')"
+                    class="w-full px-3 py-2 text-xs font-medium bg-rose-600 text-white rounded-md hover:bg-rose-700 transition-colors cursor-pointer">
+                Отклонить и уведомить
+            </button>
+        </form>
+    </details>
+
+    {% elif order.status == 'IN_WORK' %}
+    {# ─── Отправить редактору ─── #}
+    <form action="/admin/orders/{{ order.id }}/send-to-editor" method="post" enctype="multipart/form-data" class="mb-3">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <label class="block text-xs text-slate-500 uppercase tracking-wider mb-1">Файлы (макс 5, до 10 МБ каждый)</label>
+        <input type="file" name="files" multiple required
+               accept=".docx,.pdf,.png,.jpg,.jpeg,.txt"
+               class="w-full text-xs text-slate-600 mb-2
+                      file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0
+                      file:text-xs file:font-medium file:bg-cream file:text-gold-dark
+                      file:cursor-pointer hover:file:bg-amber-100">
+        <textarea name="comment" rows="3"
+                  placeholder="Комментарий редактору (необязательно)…"
+                  class="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:border-gold focus:outline-none mb-2"></textarea>
+        <button type="submit"
+                class="w-full px-4 py-2.5 text-sm font-medium bg-navy text-white rounded-md hover:bg-navy-light transition-colors cursor-pointer flex items-center justify-center gap-2">
+            <i data-lucide="send" class="w-4 h-4"></i> Отправить редактору
+        </button>
+    </form>
+
+    {# ─── Изменить цену в IN_WORK ─── #}
+    <details class="group">
+        <summary class="cursor-pointer px-4 py-2.5 text-sm font-medium bg-cream text-gold-dark rounded-md hover:bg-amber-100 transition-colors flex items-center justify-center gap-2 select-none">
+            <i data-lucide="coins" class="w-4 h-4"></i> Изменить цену
+        </summary>
+        <form action="/admin/orders/{{ order.id }}/change-price" method="post" class="mt-2 p-3 bg-slate-50 rounded-md">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="number" name="new_price" step="1" min="1" max="1000000" required
+                   value="{{ '%.0f'|format(order.price) if order.price else '' }}"
+                   class="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:border-gold focus:outline-none mb-2">
+            <button type="submit"
+                    class="w-full px-3 py-2 text-xs font-medium bg-navy text-white rounded-md hover:bg-navy-light transition-colors cursor-pointer">
+                Обновить и уведомить
+            </button>
+        </form>
+    </details>
+
+    {% elif order.status in ['EDITING', 'PREVIEW_SENT', 'AWAITING_PAYMENT'] %}
+    {# Статус только информационный — действия через бота / автоматически #}
+    <div class="text-sm text-slate-600 mb-3">
+        Заказ находится в работе. Дальнейшие действия идут автоматически или через редактора.
+    </div>
+    <details class="group">
+        <summary class="cursor-pointer px-4 py-2.5 text-sm font-medium bg-cream text-gold-dark rounded-md hover:bg-amber-100 transition-colors flex items-center justify-center gap-2 select-none">
+            <i data-lucide="coins" class="w-4 h-4"></i> Изменить цену
+        </summary>
+        <form action="/admin/orders/{{ order.id }}/change-price" method="post" class="mt-2 p-3 bg-slate-50 rounded-md">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="number" name="new_price" step="1" min="1" max="1000000" required
+                   value="{{ '%.0f'|format(order.price) if order.price else '' }}"
+                   class="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:border-gold focus:outline-none mb-2">
+            <button type="submit"
+                    class="w-full px-3 py-2 text-xs font-medium bg-navy text-white rounded-md hover:bg-navy-light transition-colors cursor-pointer">
+                Обновить и уведомить
+            </button>
+        </form>
+    </details>
+
+    {% elif order.status == 'DONE' %}
+    <div class="text-sm text-emerald-700 flex items-center gap-2">
+        <i data-lucide="check-circle-2" class="w-4 h-4"></i> Заказ выполнен.
+    </div>
+
+    {% elif order.status == 'CANCELLED' %}
+    <div class="text-sm text-slate-500 flex items-center gap-2">
+        <i data-lucide="x-circle" class="w-4 h-4"></i> Заказ отменён.
+    </div>
+
+    {% elif order.status == 'REFUNDED' %}
+    <div class="text-sm text-rose-700 flex items-center gap-2">
+        <i data-lucide="undo-2" class="w-4 h-4"></i> Деньги возвращены.
+    </div>
+
+    {% else %}
+    <p class="text-xs text-slate-400 italic">Статус «{{ order.status }}» — нет доступных действий.</p>
+    {% endif %}
+</div>

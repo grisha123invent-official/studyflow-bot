@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Заказ не найден · {{ brand_name }}{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-lg border border-slate-200 shadow-card p-12 text-center max-w-lg mx-auto">
+    <div class="w-14 h-14 mx-auto rounded-full bg-rose-50 flex items-center justify-center text-rose-600 mb-4">
+        <i data-lucide="search-x" class="w-6 h-6"></i>
+    </div>
+    <h3 class="font-serif text-2xl text-navy mb-1">Заказ #{{ order_id }} не найден</h3>
+    <p class="text-sm text-slate-500 mb-6">Возможно, ID указан неверно или заказ был удалён.</p>
+    <a href="/admin/orders" class="inline-flex items-center gap-2 px-4 py-2 text-sm bg-navy text-white rounded-md hover:bg-navy-light transition-colors">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> К списку заказов
+    </a>
+</div>
+{% endblock %}

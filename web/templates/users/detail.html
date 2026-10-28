@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} · {{ brand_name }}{% endblock %}
+
+{% block content %}
+
+<div class="mb-4">
+    <a href="/admin/users" class="text-sm text-slate-500 hover:text-navy inline-flex items-center gap-1 transition-colors">
+        <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> К списку пользователей
+    </a>
+</div>
+
+<div class="grid lg:grid-cols-3 gap-6">
+
+    <div class="lg:col-span-1 space-y-6">
+        <div class="bg-white rounded-lg border border-slate-200 shadow-card p-6">
+            <div class="flex items-start gap-4">
+                <div class="w-14 h-14 rounded-full bg-cream text-gold-dark flex items-center justify-center text-xl font-serif font-semibold shrink-0">
+                    {{ (user.full_name or user.username or 'U')[0]|upper }}
+                </div>
+                <div class="min-w-0">
+                    <h2 class="font-serif text-xl text-navy">{{ user.full_name or '—' }}</h2>
+                    {% if user.username %}
+                    <a href="https://t.me/{{ user.username }}" target="_blank" rel="noopener" class="text-sm text-gold-dark hover:text-gold transition-colors">@{{ user.username }}</a>
+                    {% endif %}
+                    {% if user.is_banned %}<div class="mt-1 inline-block px-2 py-0.5 rounded text-xs bg-rose-100 text-rose-700">Заблокирован</div>{% endif %}
+                </div>
+            </div>
+
+            <dl class="mt-5 space-y-3 text-sm">
+                <div class="flex justify-between"><dt class="text-slate-500">TG ID</dt><dd class="font-mono text-navy">{{ user.tg_id }}</dd></div>
+                {% set role_val = user.role.value if user.role.__class__.__name__ == 'UserRole' else user.role %}
+                {% set role_ru = {'student':'Студент','admin':'Админ','editor':'Редактор'}.get(role_val, role_val) %}
+                <div class="flex justify-between"><dt class="text-slate-500">Роль</dt><dd class="text-navy">{{ role_ru }}</dd></div>
+                {% if user.email %}<div class="flex justify-between"><dt class="text-slate-500">Email</dt><dd class="text-navy text-xs">{{ user.email }}</dd></div>{% endif %}
+                {% if user.phone %}<div class="flex justify-between"><dt class="text-slate-500">Телефон</dt><dd class="text-navy text-xs">{{ user.phone }}</dd></div>{% endif %}
+                <div class="flex justify-between"><dt class="text-slate-500">Согласие с офертой</dt><dd class="text-navy text-xs">{{ user.consented_at.strftime('%d.%m.%Y') if user.consented_at else '—' }}</dd></div>
+                <div class="flex justify-between"><dt class="text-slate-500">Регистрация</dt><dd class="text-navy text-xs">{{ user.created_at.strftime('%d.%m.%Y') if user.created_at else '—' }}</dd></div>
+            </dl>
+        </div>
+
+        <div class="bg-white rounded-lg border border-slate-200 shadow-card p-6">
+            <h3 class="font-serif text-lg text-navy mb-3 flex items-center gap-2"><i data-lucide="gift" class="w-4 h-4 text-gold-dark"></i> Реферальная программа</h3>
+            <div class="grid grid-cols-2 gap-3 text-center">
+                <div class="p-3 rounded-md bg-cream/40">
+                    <div class="text-xs text-slate-500 uppercase tracking-wider">Баланс</div>
+                    <div class="text-xl font-serif font-semibold text-gold-dark mt-1">{{ "%.0f ₽"|format(user.ref_balance) }}</div>
+                </div>
+                <div class="p-3 rounded-md bg-slate-50">
+                    <div class="text-xs text-slate-500 uppercase tracking-wider">Приглашено</div>
+                    <div class="text-xl font-serif font-semibold text-navy mt-1">{{ referred_count }}</div>
+                </div>
+            </div>
+        </div>
+
+        {# ─── Действия администратора ─── #}
+        <div class="bg-white rounded-lg border border-amber-200 shadow-card p-5">
+            <h3 class="font-serif text-lg text-navy mb-3 flex items-center gap-2">
+                <i data-lucide="shield-alert" class="w-4 h-4 text-amber-600"></i> Действия администратора
+            </h3>
+
+            {# Бан / Разбан #}
+            {% if user.is_banned %}
+            <form action="/admin/users/{{ user.tg_id }}/unban" method="post" class="mb-3">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <button type="submit"
+                        class="w-full px-3 py-2 text-sm font-medium bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors cursor-pointer flex items-center justify-center gap-2">
+                    <i data-lucide="unlock" class="w-4 h-4"></i> Разблокировать
+                </button>
+            </form>
+            {% else %}
+            <details class="mb-3 group">
+                <summary class="cursor-pointer px-3 py-2 text-sm font-medium bg-rose-50 text-rose-700 rounded-md hover:bg-rose-100 transition-colors flex items-center justify-center gap-2 select-none">
+                    <i data-lucide="ban" class="w-4 h-4"></i> Заблокировать
+                </summary>
+                <form action="/admin/users/{{ user.tg_id }}/ban" method="post" class="mt-2 p-3 bg-rose-50/50 rounded-md">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <textarea name="reason" rows="2" required minlength="3"
+                              placeholder="Причина блокировки…"
+                              class="w-full px-3 py-2 text-sm border border-rose-200 rounded-md focus:border-rose-500 focus:outline-none mb-2"></textarea>
+                    <button type="submit"
+                            onclick="return confirm('Точно заблокировать пользователя {{ user.tg_id }}?')"
+                            class="w-full px-3 py-1.5 text-xs font-medium bg-rose-600 text-white rounded-md hover:bg-rose-700 transition-colors cursor-pointer">
+                        Подтвердить блокировку
+                    </button>
+                </form>
+            </details>
+            {% endif %}
+
+            {# Ручное начисление бонуса #}
+            <details class="group">
+                <summary class="cursor-pointer px-3 py-2 text-sm font-medium bg-cream text-gold-dark rounded-md hover:bg-amber-100 transition-colors flex items-center justify-center gap-2 select-none">
+                    <i data-lucide="coins" class="w-4 h-4"></i> Начислить реф-бонус
+                </summary>
+                <form action="/admin/users/{{ user.tg_id }}/credit-bonus" method="post" class="mt-2 p-3 bg-amber-50/50 rounded-md">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <label class="block text-xs text-slate-500 mb-1">Сумма (₽)</label>
+                    <input type="number" name="amount" step="1" min="1" max="50000" required
+                           placeholder="500"
+                           class="w-full px-3 py-2 text-sm border border-amber-200 rounded-md focus:border-gold focus:outline-none mb-2">
+                    <label class="block text-xs text-slate-500 mb-1">Причина (для аудита)</label>
+                    <textarea name="reason" rows="2" required minlength="5"
+                              placeholder="Например: компенсация за задержку…"
+                              class="w-full px-3 py-2 text-sm border border-amber-200 rounded-md focus:border-gold focus:outline-none mb-2"></textarea>
+                    <button type="submit"
+                            onclick="return confirm('Начислить бонус пользователю {{ user.tg_id }}?')"
+                            class="w-full px-3 py-1.5 text-xs font-medium bg-navy text-white rounded-md hover:bg-navy-light transition-colors cursor-pointer">
+                        Начислить и уведомить
+                    </button>
+                </form>
+            </details>
+        </div>
+    </div>
+
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-lg border border-slate-200 shadow-card p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="font-serif text-xl text-navy flex items-center gap-2"><i data-lucide="package" class="w-4 h-4 text-gold-dark"></i> Заказы ({{ user_orders|length }})</h2>
+            </div>
+            {% if user_orders %}
+            <div class="space-y-2">
+                {% for o in user_orders %}
+                <a href="/admin/orders/{{ o.id }}" class="block p-3 rounded-md border border-slate-100 hover:bg-cream/40 transition-colors">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="min-w-0 flex-1">
+                            <div class="text-sm text-navy font-medium truncate">{{ o.topic or 'Без темы' }}</div>
+                            <div class="text-xs text-slate-400 mt-0.5">#{{ o.id }} · {{ o.work_type or '—' }} · {{ o.created_at.strftime('%d.%m.%Y') if o.created_at else '' }}</div>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <div class="text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-600">{{ o.status }}</div>
+                            {% if o.price %}<div class="text-sm font-mono text-navy mt-0.5">{{ "%.0f ₽"|format(o.price) }}</div>{% endif %}
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}<p class="text-sm text-slate-400">Нет заказов</p>{% endif %}
+        </div>
+
+        {% if bonuses %}
+        <div class="bg-white rounded-lg border border-slate-200 shadow-card p-6">
+            <h2 class="font-serif text-xl text-navy mb-4 flex items-center gap-2"><i data-lucide="coins" class="w-4 h-4 text-gold-dark"></i> История бонусов</h2>
+            <div class="space-y-1">
+                {% for b in bonuses %}
+                <div class="flex items-center justify-between py-2 px-3 rounded-md hover:bg-slate-50 text-sm">
+                    <div>
+                        <span class="text-xs px-2 py-0.5 rounded bg-cream text-gold-dark">{{ b.bonus_type }}</span>
+                        <span class="text-xs text-slate-400 ml-2">заказ #{{ b.order_id }}</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-xs text-slate-400">{{ b.created_at.strftime('%d.%m.%Y') if b.created_at else '' }}</span>
+                        <span class="font-mono text-gold-dark font-medium">+{{ "%.0f ₽"|format(b.amount) }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

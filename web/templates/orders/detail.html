@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+{% block title %}Заказ #{{ order.id }} · {{ brand_name }}{% endblock %}
+
+{% block content %}
+
+{% set meta = status_meta.get(order.status, {'label': order.status, 'emoji': None, 'icon': 'help-circle', 'color': 'slate'}) %}
+
+<div class="mb-4">
+    <a href="/admin/orders" class="text-sm text-slate-500 hover:text-navy inline-flex items-center gap-1 transition-colors">
+        <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> К списку заказов
+    </a>
+</div>
+
+<div class="grid lg:grid-cols-3 gap-6">
+
+    {# ─── Левая колонка: бриф + история ───────────────────────────────── #}
+    <div class="lg:col-span-2 space-y-6">
+
+        {# Статус-плашка #}
+        <div class="bg-white rounded-lg border border-slate-200 shadow-card p-5 flex items-center justify-between">
+            <div>
+                <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Текущий статус</div>
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium
+                            bg-{{ meta.color }}-50 text-{{ meta.color }}-700 border border-{{ meta.color }}-200/60">
+                    {% if meta.emoji %}<span class="text-base">{{ meta.emoji }}</span>
+                    {% else %}<i data-lucide="{{ meta.icon }}" class="w-4 h-4"></i>{% endif %}
+                    {{ meta.label }}
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Цена</div>
+                <div class="font-serif text-3xl text-navy font-semibold">
+                    {% if order.price %}{{ "%.0f ₽"|format(order.price) }}
+                    {% else %}<span class="text-slate-300">—</span>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        {# Бриф #}
+        <div class="bg-white rounded-lg border border-slate-200 shadow-card p-6">
+            <h2 class="font-serif text-xl text-navy mb-4 flex items-center gap-2">
+                <i data-lucide="file-text" class="w-4 h-4 text-gold-dark"></i> Бриф
+            </h2>
+            <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-sm">
+                <div>
+                    <dt class="text-xs text-slate-500 uppercase tracking-wider mb-1">Тип работы</dt>
+                    <dd class="text-navy">{{ order.work_type or '—' }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs text-slate-500 uppercase tracking-wider mb-1">Предмет</dt>
+                    <dd class="text-navy">{{ order.subject or '—' }}</dd>
+                </div>
+                <div class="md:col-span-2">
+                    <dt class="text-xs text-slate-500 uppercase tracking-wider mb-1">Тема</dt>
+                    <dd class="text-navy">{{ order.topic or '—' }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs text-slate-500 uppercase tracking-wider mb-1">Объём</dt>
+                    <dd class="text-navy">{% if order.pages %}{{ order.pages }} стр.{% else %}—{% endif %}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs text-slate-500 uppercase tracking-wider mb-1">Дедлайн</dt>
+                    <dd class="text-navy">{{ order.deadline or '—' }}</dd>
+                </div>
+                {% if order.comment %}
+                <div class="md:col-span-2">
+                    <dt class="text-xs text-slate-500 uppercase tracking-wider mb-1">Комментарий студента</dt>
+                    <dd class="text-navy whitespace-pre-wrap bg-cream/40 p-3 rounded-md border border-amber-100/50">{{ order.comment }}</dd>
+                </div>
+                {% endif %}
+                {% if order.revision_comment %}
+                <div class="md:col-span-2">
+                    <dt class="text-xs text-slate-500 uppercase tracking-wider mb-1">
+                        Правка от клиента ({{ order.revisions_used }}/2)
+                    </dt>
+                    <dd class="text-navy whitespace-pre-wrap bg-rose-50 p-3 rounded-md border border-rose-200/60">{{ order.revision_comment }}</dd>
+                </div>
+                {% endif %}
+            </dl>
+        </div>
+
+        {# Промпт #}
+        {% if order.prompt_text %}
+        <div class="bg-white rounded-lg border border-slate-200 shadow-card p-6">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="font-serif text-xl text-navy flex items-center gap-2">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-gold-dark"></i> Промпт
+                </h2>
+                <button type="button"
+                        onclick="navigator.clipboard.writeText(document.getElementById('prompt-text').innerText).then(()=>{this.innerText='Скопировано ✓'; setTimeout(()=>this.innerText='Копировать',1500)})"
+                        class="text-xs text-gold-dark hover:text-gold transition-colors cursor-pointer">
+                    Копировать
+                </button>
+            </div>
+            <pre id="prompt-text" class="text-xs text-slate-700 bg-slate-50 p-4 rounded-md whitespace-pre-wrap font-mono leading-relaxed max-h-96 overflow-y-auto">{{ order.prompt_text }}</pre>
+        </div>
+        {% endif %}
+
+        {# Файлы #}
+        {% if order.files %}
+        <div class="bg-white rounded-lg border border-slate-200 shadow-card p-6">
+            <h2 class="font-serif text-xl text-navy mb-4 flex items-center gap-2">
+                <i data-lucide="paperclip" class="w-4 h-4 text-gold-dark"></i> Файлы ({{ order.files|length }})
+            </h2>
+            <div class="space-y-2">
+                {% for f in order.files %}
+                <div class="flex items-center gap-3 p-3 rounded-md bg-slate-50 border border-slate-100">
+                    <div class="w-8 h-8 rounded-md bg-white border border-slate-200 flex items-center justify-center text-slate-500">
+                        <i data-lucide="file" class="w-4 h-4"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium text-navy truncate">{{ f.filename or 'без имени' }}</div>
+                        <div class="text-xs text-slate-400">
+                            {{ f.file_type }} · {{ f.uploaded_at.strftime('%d.%m.%Y %H:%M') if f.uploaded_at else '—' }}
+                            {% if f.is_watermarked %} · <span class="text-amber-700">с водяным знаком</span>{% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {# Платежи #}
+        {% if order.payments %}
+        <div class="bg-white rounded-lg border border-slate-200 shadow-card p-6">
+            <h2 class="font-serif text-xl text-navy mb-4 flex items-center gap-2">
+                <i data-lucide="credit-card" class="w-4 h-4 text-gold-dark"></i> Платежи ({{ order.payments|length }})
+            </h2>
+            <div class="space-y-2">
+                {% for p in order.payments %}
+                <div class="flex items-center justify-between p-3 rounded-md bg-slate-50 border border-slate-100 text-sm">
+                    <div>
+                        <div class="font-mono text-xs text-slate-400">{{ p.payment_id or '—' }}</div>
+                        <div class="text-xs text-slate-500 mt-0.5">{{ p.created_at.strftime('%d.%m.%Y %H:%M') if p.created_at else '' }}</div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="inline-block px-2 py-0.5 rounded text-xs
+                                     {% if p.status == 'paid' %}bg-emerald-100 text-emerald-700
+                                     {% elif p.status == 'refunded' %}bg-rose-100 text-rose-700
+                                     {% else %}bg-amber-100 text-amber-700{% endif %}">
+                            {{ p.status }}
+                        </span>
+                        <span class="font-mono text-navy font-medium">{{ "%.0f ₽"|format(p.amount) }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
+    {# ─── Правая колонка: студент + действия ──────────────────────────── #}
+    <div class="space-y-6">
+
+        {# Студент #}
+        <div class="bg-white rounded-lg border border-slate-200 shadow-card p-5">
+            <h2 class="font-serif text-lg text-navy mb-4 flex items-center gap-2">
+                <i data-lucide="user" class="w-4 h-4 text-gold-dark"></i> Студент
+            </h2>
+            {% if order.user %}
+            <div class="space-y-2 text-sm">
+                <div>
+                    <div class="text-xs text-slate-500 uppercase tracking-wider">Имя</div>
+                    <div class="text-navy">{{ order.user.full_name or '—' }}</div>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-500 uppercase tracking-wider">Username</div>
+                    <div class="text-navy">
+                        {% if order.user.username %}
+                        <a href="https://t.me/{{ order.user.username }}" target="_blank" rel="noopener"
+                           class="text-gold-dark hover:text-gold transition-colors">@{{ order.user.username }}</a>
+                        {% else %}—{% endif %}
+                    </div>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-500 uppercase tracking-wider">Telegram ID</div>
+                    <div class="text-navy font-mono text-xs">{{ order.user.tg_id }}</div>
+                </div>
+                {% if order.user.email %}
+                <div>
+                    <div class="text-xs text-slate-500 uppercase tracking-wider">Email</div>
+                    <div class="text-navy text-xs">{{ order.user.email }}</div>
+                </div>
+                {% endif %}
+                {% if order.user.phone %}
+                <div>
+                    <div class="text-xs text-slate-500 uppercase tracking-wider">Телефон</div>
+                    <div class="text-navy text-xs">{{ order.user.phone }}</div>
+                </div>
+                {% endif %}
+                <div>
+                    <div class="text-xs text-slate-500 uppercase tracking-wider">Реф-баланс</div>
+                    <div class="text-navy font-mono">{{ "%.0f ₽"|format(order.user.ref_balance) }}</div>
+                </div>
+            </div>
+            {% else %}
+            <p class="text-sm text-slate-400">Пользователь не найден</p>
+            {% endif %}
+        </div>
+
+        {% include 'orders/_actions.html' %}
+
+        {# Метаданные #}
+        <div class="bg-white rounded-lg border border-slate-200 shadow-card p-5">
+            <h2 class="font-serif text-lg text-navy mb-3">Метаданные</h2>
+            <div class="space-y-2 text-xs">
+                <div class="flex justify-between">
+                    <span class="text-slate-500">ID</span>
+                    <span class="font-mono text-navy">#{{ order.id }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Создан</span>
+                    <span class="text-navy">{{ order.created_at.strftime('%d.%m.%Y %H:%M') if order.created_at else '—' }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Правок использовано</span>
+                    <span class="text-navy">{{ order.revisions_used }}/2</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

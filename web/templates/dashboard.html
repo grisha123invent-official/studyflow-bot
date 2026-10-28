@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block title %}Дашборд · {{ brand_name }}{% endblock %}
+
+{% block content %}
+
+{# Алерты — pending requests #}
+{% if pending_refunds > 0 or pending_withdrawals > 0 %}
+<div class="grid gap-3 mb-6">
+    {% if pending_refunds > 0 %}
+    <a href="/admin/refunds" class="flex items-center justify-between p-4 rounded-lg bg-amber-50 border border-amber-200 hover:bg-amber-100 transition-colors cursor-pointer">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-amber-200/60 flex items-center justify-center text-amber-700 shrink-0">
+                <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            </div>
+            <div>
+                <div class="font-medium text-amber-900">Заявки на возврат ждут вашего решения</div>
+                <div class="text-xs text-amber-700">{{ pending_refunds }} шт.</div>
+            </div>
+        </div>
+        <i data-lucide="chevron-right" class="w-4 h-4 text-amber-700"></i>
+    </a>
+    {% endif %}
+    {% if pending_withdrawals > 0 %}
+    <a href="/admin/withdrawals" class="flex items-center justify-between p-4 rounded-lg bg-amber-50 border border-amber-200 hover:bg-amber-100 transition-colors cursor-pointer">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-amber-200/60 flex items-center justify-center text-amber-700 shrink-0">
+                <i data-lucide="wallet" class="w-4 h-4"></i>
+            </div>
+            <div>
+                <div class="font-medium text-amber-900">Заявки на вывод реф-баланса</div>
+                <div class="text-xs text-amber-700">{{ pending_withdrawals }} шт.</div>
+            </div>
+        </div>
+        <i data-lucide="chevron-right" class="w-4 h-4 text-amber-700"></i>
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+
+{# KPI карточки — пользователи и выручка #}
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    {% set kpi = [
+        ('users',        stats.total_users,          'Студентов',      'Всего',        'text-navy'),
+        ('plus-circle',  stats.new_today,            'Новые сегодня',  '',             'text-emerald-600'),
+        ('coins',        '%.0f ₽' % stats.total_revenue,  'Выручка',     'За всё время', 'text-gold-dark'),
+        ('trending-up',  '%.0f ₽' % stats.revenue_month,  'За месяц',    '',             'text-emerald-600'),
+    ] %}
+    {% for icon, value, label, sublabel, color in kpi %}
+    <div class="bg-white rounded-lg border border-slate-200 shadow-card p-5">
+        <div class="flex items-center gap-2 text-xs text-slate-500 uppercase tracking-wider">
+            <i data-lucide="{{ icon }}" class="w-3.5 h-3.5 {{ color }}"></i>
+            {{ label }}
+        </div>
+        <div class="text-2xl lg:text-3xl font-serif font-semibold text-navy mt-2">{{ value }}</div>
+        {% if sublabel %}<div class="text-xs text-slate-400 mt-0.5">{{ sublabel }}</div>{% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+{# Заказы по статусам #}
+<div class="bg-white rounded-lg border border-slate-200 shadow-card p-6 mb-6">
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="font-serif text-xl text-navy">Заказы по статусам</h2>
+        <a href="/admin/orders" class="text-sm text-gold-dark hover:text-gold inline-flex items-center gap-1">
+            Все заказы <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </a>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
+        {# Первые 4 статуса — с цветными эмодзи (легко считываются) #}
+        {% set order_kpi_emoji = [
+            ('🟡', 'Ожидают',     orders_pending, 'pending'),
+            ('🟠', 'В работе',    orders_in_work, 'in_work'),
+            ('🔴', 'У редактора', orders_editing, 'editing'),
+            ('🔵', 'Превью',      orders_preview, 'preview_sent'),
+        ] %}
+        {% for emoji, label, count, status in order_kpi_emoji %}
+        <a href="/admin/orders?status={{ status }}"
+           class="block p-3 rounded-md bg-slate-50 hover:bg-cream transition-colors cursor-pointer text-center">
+            <div class="text-2xl leading-none">{{ emoji }}</div>
+            <div class="text-2xl font-serif font-semibold text-navy mt-1">{{ count }}</div>
+            <div class="text-xs text-slate-500 mt-0.5">{{ label }}</div>
+        </a>
+        {% endfor %}
+
+        {# Финальные статусы — с Lucide иконками + тонированный фон #}
+        {% set order_kpi_icons = [
+            ('credit-card',     'Ждут оплаты', orders_awaiting,  'awaiting_payment', 'amber'),
+            ('check-circle-2',  'Выполнены',   orders_done,      'done',             'emerald'),
+            ('x-circle',        'Отменены',    orders_cancelled, 'cancelled',        'slate'),
+            ('undo-2',          'Возвращены',  orders_refunded,  'refunded',         'rose'),
+        ] %}
+        {% for icon, label, count, status, color in order_kpi_icons %}
+        <a href="/admin/orders?status={{ status }}"
+           class="block p-3 rounded-md bg-slate-50 hover:bg-cream transition-colors cursor-pointer text-center group">
+            <div class="w-7 h-7 mx-auto rounded-full
+                        bg-{{ color }}-100 text-{{ color }}-600
+                        flex items-center justify-center
+                        group-hover:scale-105 transition-transform">
+                <i data-lucide="{{ icon }}" class="w-4 h-4"></i>
+            </div>
+            <div class="text-2xl font-serif font-semibold text-navy mt-1">{{ count }}</div>
+            <div class="text-xs text-slate-500 mt-0.5">{{ label }}</div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+{# Топ рефереров #}
+{% if stats.top_referrers %}
+<div class="bg-white rounded-lg border border-slate-200 shadow-card p-6">
+    <h2 class="font-serif text-xl text-navy mb-4">Топ рефереров по балансу</h2>
+    <div class="space-y-2">
+        {% for u in stats.top_referrers %}
+        <div class="flex items-center justify-between py-2 px-3 rounded-md hover:bg-slate-50 transition-colors">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-cream text-gold-dark flex items-center justify-center text-sm font-semibold shrink-0">
+                    {{ loop.index }}
+                </div>
+                <div>
+                    <div class="text-sm font-medium text-navy">
+                        {% if u.username %}@{{ u.username }}{% else %}{{ u.full_name or "id" ~ u.tg_id }}{% endif %}
+                    </div>
+                    <div class="text-xs text-slate-400 font-mono">tg_id: {{ u.tg_id }}</div>
+                </div>
+            </div>
+            <div class="text-base font-mono font-medium text-gold-dark">{{ "%.0f ₽" % u.ref_balance }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

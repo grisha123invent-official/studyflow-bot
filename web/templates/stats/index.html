@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Аналитика · {{ brand_name }}{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+{% endblock %}
+
+{% block content %}
+
+{# KPI верхние #}
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    {% set kpis = [
+        ('users',         total_users,        'Пользователей',   'text-navy'),
+        ('package',       total_orders,       'Заказов',         'text-sky-600'),
+        ('coins',         '%.0f ₽' % total_revenue, 'Выручка',   'text-gold-dark'),
+        ('trending-up',   '%.1f%%' % conversion,    'Конверсия в DONE', 'text-emerald-600'),
+    ] %}
+    {% for icon, value, label, color in kpis %}
+    <div class="bg-white rounded-lg border border-slate-200 shadow-card p-5">
+        <div class="flex items-center gap-2 text-xs text-slate-500 uppercase tracking-wider">
+            <i data-lucide="{{ icon }}" class="w-3.5 h-3.5 {{ color }}"></i>
+            {{ label }}
+        </div>
+        <div class="text-2xl lg:text-3xl font-serif font-semibold text-navy mt-2">{{ value }}</div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="grid lg:grid-cols-2 gap-6">
+
+    {# График выручки за 30 дней #}
+    <div class="bg-white rounded-lg border border-slate-200 shadow-card p-6 lg:col-span-2">
+        <h2 class="font-serif text-xl text-navy mb-4 flex items-center gap-2">
+            <i data-lucide="line-chart" class="w-4 h-4 text-gold-dark"></i> Выручка за 30 дней
+        </h2>
+        <div style="position: relative; height: 280px;">
+            <canvas id="revenueChart"></canvas>
+        </div>
+    </div>
+
+    {# Заказы по статусам — pie #}
+    <div class="bg-white rounded-lg border border-slate-200 shadow-card p-6">
+        <h2 class="font-serif text-xl text-navy mb-4 flex items-center gap-2">
+            <i data-lucide="pie-chart" class="w-4 h-4 text-gold-dark"></i> Заказы по статусам
+        </h2>
+        <div style="position: relative; height: 280px;">
+            <canvas id="statusChart"></canvas>
+        </div>
+    </div>
+
+    {# Топ-10 рефереров — bar #}
+    <div class="bg-white rounded-lg border border-slate-200 shadow-card p-6">
+        <h2 class="font-serif text-xl text-navy mb-4 flex items-center gap-2">
+            <i data-lucide="bar-chart-3" class="w-4 h-4 text-gold-dark"></i> Топ-10 рефереров
+        </h2>
+        {% if top_referrers %}
+        <div style="position: relative; height: 280px;">
+            <canvas id="referrersChart"></canvas>
+        </div>
+        {% else %}
+        <p class="text-sm text-slate-400 text-center py-10">Пока нет рефереров с балансом</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+window.addEventListener('load', function() {
+    if (typeof Chart === 'undefined') { setTimeout(arguments.callee, 100); return; }
+
+    const navy = '#0B162C', gold = '#D4AF37', goldLight = '#E6C374';
+    const palette = ['#D4AF37', '#0B162C', '#10B981', '#0EA5E9', '#F59E0B', '#EF4444', '#8B5CF6', '#64748B', '#EC4899'];
+
+    Chart.defaults.font.family = 'Manrope, -apple-system, sans-serif';
+    Chart.defaults.color = '#64748B';
+
+    // Revenue line chart
+    new Chart(document.getElementById('revenueChart'), {
+        type: 'line',
+        data: {
+            labels: {{ days|tojson }}.map(d => d.slice(5)),
+            datasets: [{
+                label: 'Выручка, ₽',
+                data: {{ amounts|tojson }},
+                borderColor: gold,
+                backgroundColor: 'rgba(212, 175, 55, 0.12)',
+                borderWidth: 2,
+                tension: 0.35,
+                fill: true,
+                pointRadius: 3,
+                pointBackgroundColor: gold,
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, ticks: { callback: v => v + ' ₽' }, grid: { color: '#F1F5F9' } },
+                x: { grid: { display: false } },
+            }
+        }
+    });
+
+    // Status pie chart
+    const statusData = {{ orders_by_status|tojson }};
+    new Chart(document.getElementById('statusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: statusData.map(r => r[0]),
+            datasets: [{
+                data: statusData.map(r => r[1]),
+                backgroundColor: palette,
+                borderWidth: 2,
+                borderColor: '#fff',
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'right', labels: { font: { size: 11 }, padding: 8 } } },
+        }
+    });
+
+    // Referrers bar
+    const refs = {{ top_referrers|tojson }};
+    if (refs.length > 0) {
+        new Chart(document.getElementById('referrersChart'), {
+            type: 'bar',
+            data: {
+                labels: refs.map(r => r.username ? '@' + r.username : (r.full_name || 'id' + r.tg_id)),
+                datasets: [{
+                    label: 'Баланс, ₽',
+                    data: refs.map(r => r.balance),
+                    backgroundColor: gold,
+                    borderRadius: 4,
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { beginAtZero: true, ticks: { callback: v => v + ' ₽' }, grid: { color: '#F1F5F9' } },
+                    y: { grid: { display: false } },
+                }
+            }
+        });
+    }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Пользователь не найден · {{ brand_name }}{% endblock %}
+{% block content %}
+<div class="bg-white rounded-lg border border-slate-200 shadow-card p-12 text-center max-w-lg mx-auto">
+    <i data-lucide="user-x" class="w-10 h-10 mx-auto text-rose-400 mb-3"></i>
+    <h3 class="font-serif text-2xl text-navy mb-1">Пользователь {{ tg_id }} не найден</h3>
+    <a href="/admin/users" class="inline-flex items-center gap-2 mt-4 px-4 py-2 text-sm bg-navy text-white rounded-md hover:bg-navy-light">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> К списку пользователей
+    </a>
+</div>
+{% endblock %}

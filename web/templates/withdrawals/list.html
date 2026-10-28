@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Выводы · {{ brand_name }}{% endblock %}
+
+{% block content %}
+
+<div class="bg-white rounded-lg border border-slate-200 shadow-card p-4 mb-6">
+    <div class="flex flex-wrap gap-2">
+        {% set sf = [(None, 'Все', 'navy'), ('pending', 'Ожидают', 'amber'), ('approved', 'Одобрены', 'emerald'), ('rejected', 'Отклонены', 'slate')] %}
+        {% for v, l, c in sf %}
+        <a href="/admin/withdrawals{% if v %}?status={{ v }}{% endif %}"
+           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors
+                  {% if status == v %}bg-{{ c }}-600 text-white{% else %}bg-{{ c }}-50 text-{{ c }}-700 hover:bg-{{ c }}-100{% endif %}">
+            {{ l }}
+            {% if v %}<span class="text-[10px] opacity-70">{{ counts.get(v, 0) }}</span>{% endif %}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% if withdrawals %}
+<div class="bg-white rounded-lg border border-slate-200 shadow-card overflow-hidden">
+    <table class="w-full text-sm table-zebra">
+        <thead class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+            <tr>
+                <th class="text-left px-4 py-3 font-medium">#</th>
+                <th class="text-left px-4 py-3 font-medium">Студент</th>
+                <th class="text-left px-4 py-3 font-medium">Карта/реквизиты</th>
+                <th class="text-right px-4 py-3 font-medium">Сумма</th>
+                <th class="text-left px-4 py-3 font-medium">Статус</th>
+                <th class="text-left px-4 py-3 font-medium">Создан</th>
+                <th class="text-left px-4 py-3 font-medium">Обработан</th>
+                <th class="px-4 py-3"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for w in withdrawals %}
+            {% set sc = {'pending':'amber','approved':'emerald','rejected':'slate'}.get(w.status, 'slate') %}
+            <tr class="border-t border-slate-100 hover:bg-cream/40 transition-colors">
+                <td class="px-4 py-3 font-mono text-xs text-slate-400">#{{ w.id }}</td>
+                <td class="px-4 py-3">
+                    {% if w.user %}
+                    <a href="/admin/users/{{ w.user.tg_id }}" class="text-navy hover:text-gold-dark text-sm">
+                        {% if w.user.username %}@{{ w.user.username }}{% else %}{{ w.user.full_name or 'id' ~ w.user.tg_id }}{% endif %}
+                    </a>
+                    <div class="text-xs text-slate-400 font-mono">{{ w.user.tg_id }}</div>
+                    {% else %}—{% endif %}
+                </td>
+                <td class="px-4 py-3 text-xs font-mono text-slate-600 max-w-xs truncate">{{ w.card_details }}</td>
+                <td class="px-4 py-3 text-right font-mono font-medium text-gold-dark">{{ "%.0f ₽"|format(w.amount) }}</td>
+                <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded text-xs bg-{{ sc }}-100 text-{{ sc }}-700">{{ w.status }}</span></td>
+                <td class="px-4 py-3 text-xs text-slate-500 whitespace-nowrap">{{ w.created_at.strftime('%d.%m.%Y %H:%M') if w.created_at else '—' }}</td>
+                <td class="px-4 py-3 text-xs text-slate-500 whitespace-nowrap">{{ w.processed_at.strftime('%d.%m.%Y %H:%M') if w.processed_at else '—' }}</td>
+                <td class="px-4 py-3">
+                    {% if w.status == 'pending' %}
+                    <div class="flex items-center gap-1">
+                        <form action="/admin/withdrawals/{{ w.id }}/approve" method="post" class="inline">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                            <button type="submit"
+                                    onclick="return confirm('Одобрить вывод #{{ w.id }} ({{ '%.0f ₽'|format(w.amount) }})?')"
+                                    title="Одобрить"
+                                    class="p-1.5 rounded-md bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors cursor-pointer">
+                                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </form>
+                        <details class="relative">
+                            <summary class="list-none p-1.5 rounded-md bg-rose-50 text-rose-700 hover:bg-rose-100 transition-colors cursor-pointer">
+                                <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                            </summary>
+                            <form action="/admin/withdrawals/{{ w.id }}/reject" method="post"
+                                  class="absolute right-0 mt-1 p-3 bg-white border border-slate-200 shadow-lg rounded-md z-10 w-64">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                <textarea name="reason" rows="2" required minlength="3"
+                                          placeholder="Причина отказа…"
+                                          class="w-full px-2 py-1.5 text-xs border border-slate-200 rounded mb-2 focus:outline-none focus:border-rose-500"></textarea>
+                                <button type="submit"
+                                        class="w-full px-2 py-1 text-xs bg-rose-600 text-white rounded hover:bg-rose-700 cursor-pointer">
+                                    Отклонить
+                                </button>
+                            </form>
+                        </details>
+                    </div>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="bg-white rounded-lg border border-slate-200 shadow-card p-12 text-center">
+    <i data-lucide="wallet" class="w-10 h-10 mx-auto text-slate-300 mb-3"></i>
+    <p class="text-slate-500">Заявок на вывод нет</p>
+</div>
+{% endif %}
+
+{% endblock %}

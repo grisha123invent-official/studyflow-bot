@@ -1,0 +1,10 @@
+{% if flash %}
+{% set level = flash.level %}
+{% set color = {'ok':'emerald','err':'rose','info':'sky'}.get(level, 'sky') %}
+{% set icon  = {'ok':'check-circle','err':'x-circle','info':'info'}.get(level, 'info') %}
+<div class="mb-4 flex items-center gap-3 px-4 py-3 rounded-lg border bg-{{ color }}-50 border-{{ color }}-200 text-{{ color }}-800 animate-fade-in"
+     role="status">
+    <i data-lucide="{{ icon }}" class="w-4 h-4 shrink-0"></i>
+    <div class="text-sm flex-1">{{ flash.message }}</div>
+</div>
+{% endif %}

@@ -1,0 +1,29 @@
+[Unit]
+Description=Pishu24 Telegram Bot
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=bot
+Group=bot
+WorkingDirectory=/home/bot/Bot_bid_univer
+EnvironmentFile=/home/bot/Bot_bid_univer/.env
+ExecStart=/home/bot/Bot_bid_univer/.venv/bin/python3 main.py
+Restart=always
+RestartSec=10
+
+# Безопасность
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/home/bot/Bot_bid_univer
+ProtectHome=read-only
+
+# Логирование
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pishu24-bot
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ brand_name }} — консультации по подготовке учебных и научных текстов</title>
+    <meta name="description" content="Консультационные услуги по подготовке учебных и научных текстов: курсовые, рефераты, статьи, презентации. Превью с водяным знаком до оплаты, чеки 54-ФЗ.">
+    <style>body { margin: 0; padding: 0; background: #081530; }</style>
+</head>
+<body>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+#pishu24-app {
+    /* Айдентика бренда */
+    --p24-navy:        #0d1f3c;
+    --p24-navy-deep:   #081530;
+    --p24-navy-light:  #1a3258;
+    --p24-gold:        #d4a44a;
+    --p24-gold-light:  #e6c374;
+    --p24-gold-dark:   #b88a2f;
+    --p24-cream:       #f7f3eb;
+    --p24-text:        #1a2438;
+    --p24-muted:       #5a6a85;
+    --p24-line:        #e2e3e6;
+    --p24-bg:          #ffffff;
+
+    --p24-serif:       'Cormorant Garamond', 'Times New Roman', serif;
+    --p24-sans:        'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    font-family: var(--p24-sans);
+    color: var(--p24-text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    position: relative;
+    z-index: 1;
+}
+
+#pishu24-app *,
+#pishu24-app *::before,
+#pishu24-app *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+#pishu24-app .p24-container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 28px;
+}
+
+#pishu24-app .p24-section {
+    padding: 96px 0;
+    position: relative;
+}
+
+#pishu24-app h2.p24-heading {
+    font-family: var(--p24-serif);
+    font-size: clamp(34px, 4.5vw, 52px);
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+    color: var(--p24-navy);
+    line-height: 1.15;
+}
+
+#pishu24-app p.p24-subheading {
+    text-align: center;
+    color: var(--p24-muted);
+    max-width: 680px;
+    margin: 0 auto 64px;
+    font-size: 17px;
+    line-height: 1.65;
+}
+
+#pishu24-app .p24-divider {
+    width: 56px;
+    height: 2px;
+    background: var(--p24-gold);
+    margin: 0 auto 28px;
+}
+
+/* ─── HERO ─────────────────────────────────────────────────────────── */
+#pishu24-app .p24-hero {
+    background: var(--p24-navy);
+    background-image:
+        radial-gradient(ellipse at top left, rgba(212, 164, 74, 0.08), transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(212, 164, 74, 0.06), transparent 50%);
+    color: white;
+    padding: 110px 0 120px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+#pishu24-app .p24-hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--p24-gold), transparent);
+}
+
+#pishu24-app .p24-hero-inner {
+    position: relative;
+    z-index: 2;
+}
+
+#pishu24-app .p24-logo-mark {
+    width: 76px;
+    height: 76px;
+    margin: 0 auto 28px;
+    background: var(--p24-navy-deep);
+    border: 2px solid var(--p24-gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--p24-gold);
+    position: relative;
+}
+
+#pishu24-app .p24-logo-mark::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border: 1px solid rgba(212, 164, 74, 0.25);
+    border-radius: 50%;
+}
+
+#pishu24-app .p24-logo-mark svg {
+    width: 38px;
+    height: 38px;
+}
+
+#pishu24-app .p24-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(212, 164, 74, 0.08);
+    border: 1px solid rgba(212, 164, 74, 0.35);
+    color: var(--p24-gold-light);
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 28px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+#pishu24-app .p24-badge-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--p24-gold);
+    border-radius: 50%;
+    animation: p24-blink 2.5s ease-in-out infinite;
+}
+
+@keyframes p24-blink {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(212, 164, 74, 0.6); }
+    50% { opacity: 0.5; box-shadow: 0 0 0 8px rgba(212, 164, 74, 0); }
+}
+
+#pishu24-app .p24-hero h1 {
+    font-family: var(--p24-serif);
+    font-size: clamp(40px, 6.5vw, 72px);
+    font-weight: 600;
+    line-height: 1.08;
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+}
+
+#pishu24-app .p24-hero h1 em {
+    font-style: italic;
+    color: var(--p24-gold);
+    font-weight: 500;
+}
+
+#pishu24-app .p24-hero .p24-lead {
+    font-size: clamp(16px, 1.8vw, 19px);
+    max-width: 640px;
+    margin: 0 auto 44px;
+    color: rgba(255, 255, 255, 0.78);
+    font-weight: 400;
+}
+
+#pishu24-app .p24-cta-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    align-items: center;
+}
+
+#pishu24-app .p24-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 32px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    border: none;
+    font-family: var(--p24-sans);
+    letter-spacing: 0.01em;
+}
+
+#pishu24-app .p24-btn-primary {
+    background: var(--p24-gold);
+    color: var(--p24-navy-deep);
+    box-shadow: 0 4px 24px rgba(212, 164, 74, 0.3);
+}
+
+#pishu24-app .p24-btn-primary:hover {
+    background: var(--p24-gold-light);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 32px rgba(212, 164, 74, 0.45);
+}
+
+#pishu24-app .p24-btn-ghost {
+    background: transparent;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+#pishu24-app .p24-btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.45);
+}
+
+#pishu24-app .p24-btn-dark {
+    background: var(--p24-navy);
+    color: var(--p24-gold-light);
+}
+
+#pishu24-app .p24-btn-dark:hover {
+    background: var(--p24-navy-light);
+}
+
+#pishu24-app .p24-hero-stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 56px;
+    margin-top: 72px;
+    padding-top: 44px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+#pishu24-app .p24-stat-num {
+    font-family: var(--p24-serif);
+    font-size: 42px;
+    font-weight: 600;
+    color: var(--p24-gold);
+    line-height: 1;
+}
+
+#pishu24-app .p24-stat-label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* ─── СЕРВИСЫ ──────────────────────────────────────────────────────── */
+#pishu24-app .p24-services {
+    background: var(--p24-cream);
+}
+
+#pishu24-app .p24-services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 24px;
+}
+
+#pishu24-app .p24-card {
+    background: white;
+    border: 1px solid var(--p24-line);
+    border-radius: 4px;
+    padding: 36px 32px;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    position: relative;
+}
+
+#pishu24-app .p24-card.p24-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#pishu24-app .p24-card:hover {
+    border-color: var(--p24-gold);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px -16px rgba(13, 31, 60, 0.18);
+}
+
+#pishu24-app .p24-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--p24-gold);
+    transition: width 0.35s ease;
+}
+
+#pishu24-app .p24-card:hover::before {
+    width: 100%;
+}
+
+#pishu24-app .p24-card-num {
+    font-family: var(--p24-serif);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--p24-gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+    display: block;
+}
+
+#pishu24-app .p24-card h3 {
+    font-family: var(--p24-serif);
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--p24-navy);
+    line-height: 1.2;
+}
+
+#pishu24-app .p24-card p {
+    color: var(--p24-muted);
+    font-size: 15px;
+    margin-bottom: 24px;
+    min-height: 48px;
+}
+
+#pishu24-app .p24-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-top: 18px;
+    border-top: 1px solid var(--p24-line);
+}
+
+#pishu24-app .p24-card-price {
+    font-family: var(--p24-serif);
+    font-weight: 600;
+    color: var(--p24-navy);
+    font-size: 22px;
+    line-height: 1;
+}
+
+#pishu24-app .p24-card-volume {
+    color: var(--p24-muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* ─── ШАГИ ─────────────────────────────────────────────────────────── */
+#pishu24-app .p24-how {
+    background: var(--p24-bg);
+}
+
+#pishu24-app .p24-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 32px 24px;
+    counter-reset: p24-step;
+}
+
+#pishu24-app .p24-step {
+    position: relative;
+    padding: 28px 24px 28px 0;
+    border-top: 1px solid var(--p24-line);
+}
+
+#pishu24-app .p24-step::before {
+    counter-increment: p24-step;
+    content: counter(p24-step, decimal-leading-zero);
+    font-family: var(--p24-serif);
+    color: var(--p24-gold);
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 14px;
+    display: block;
+}
+
+#pishu24-app .p24-step h4 {
+    font-family: var(--p24-serif);
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--p24-navy);
+}
+
+#pishu24-app .p24-step p {
+    color: var(--p24-muted);
+    font-size: 14px;
+}
+
+/* ─── ПОЧЕМУ МЫ ────────────────────────────────────────────────────── */
+#pishu24-app .p24-why {
+    background: var(--p24-navy);
+    color: white;
+}
+
+#pishu24-app .p24-why h2.p24-heading { color: white; }
+#pishu24-app .p24-why p.p24-subheading { color: rgba(255, 255, 255, 0.65); }
+#pishu24-app .p24-why .p24-divider { background: var(--p24-gold); }
+
+#pishu24-app .p24-why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#pishu24-app .p24-feature {
+    padding: 36px 28px;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    transition: background 0.2s;
+}
+
+#pishu24-app .p24-feature:hover {
+    background: rgba(212, 164, 74, 0.04);
+}
+
+#pishu24-app .p24-feature-icon {
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--p24-gold);
+    color: var(--p24-gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+#pishu24-app .p24-feature h5 {
+    font-family: var(--p24-serif);
+    font-size: 21px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: white;
+}
+
+#pishu24-app .p24-feature p {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 14.5px;
+    line-height: 1.6;
+}
+
+/* ─── РЕФЕРАЛЫ ─────────────────────────────────────────────────────── */
+#pishu24-app .p24-refer {
+    background: var(--p24-cream);
+    padding: 100px 0;
+}
+
+#pishu24-app .p24-refer-inner {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+#pishu24-app .p24-refer-mark {
+    font-family: var(--p24-serif);
+    font-size: 13px;
+    color: var(--p24-gold-dark);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    font-weight: 600;
+}
+
+#pishu24-app .p24-refer h2 {
+    font-family: var(--p24-serif);
+    font-size: clamp(32px, 4.5vw, 48px);
+    font-weight: 600;
+    margin-bottom: 18px;
+    color: var(--p24-navy);
+    line-height: 1.12;
+}
+
+#pishu24-app .p24-refer > .p24-container > .p24-refer-inner > p {
+    color: var(--p24-muted);
+    font-size: 17px;
+    margin-bottom: 48px;
+}
+
+#pishu24-app .p24-refer-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    margin-bottom: 48px;
+}
+
+#pishu24-app .p24-refer-card {
+    background: white;
+    border: 1px solid var(--p24-line);
+    border-radius: 4px;
+    padding: 36px 28px;
+    text-align: left;
+    position: relative;
+    transition: all 0.25s;
+}
+
+#pishu24-app .p24-refer-card:hover {
+    border-color: var(--p24-gold);
+    transform: translateY(-3px);
+}
+
+#pishu24-app .p24-refer-amount {
+    font-family: var(--p24-serif);
+    font-size: 44px;
+    font-weight: 600;
+    color: var(--p24-navy);
+    margin-bottom: 8px;
+    line-height: 1;
+}
+
+#pishu24-app .p24-refer-card p {
+    color: var(--p24-muted);
+    font-size: 14px;
+    margin: 0;
+}
+
+#pishu24-app .p24-refer-card::before {
+    content: '';
+    position: absolute;
+    top: 36px;
+    right: 28px;
+    width: 28px;
+    height: 28px;
+    background: var(--p24-gold);
+    border-radius: 50%;
+    opacity: 0.15;
+}
+
+/* ─── FAQ ──────────────────────────────────────────────────────────── */
+#pishu24-app .p24-faq {
+    background: white;
+}
+
+#pishu24-app .p24-faq-list {
+    max-width: 820px;
+    margin: 0 auto;
+}
+
+#pishu24-app .p24-faq-item {
+    border-bottom: 1px solid var(--p24-line);
+    transition: all 0.2s;
+}
+
+#pishu24-app .p24-faq-item:first-child {
+    border-top: 1px solid var(--p24-line);
+}
+
+#pishu24-app .p24-faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 28px 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--p24-navy);
+    cursor: pointer;
+    font-family: var(--p24-sans);
+    transition: color 0.2s;
+}
+
+#pishu24-app .p24-faq-question:hover {
+    color: var(--p24-gold-dark);
+}
+
+#pishu24-app .p24-faq-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    margin-left: 20px;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+#pishu24-app .p24-faq-icon::before,
+#pishu24-app .p24-faq-icon::after {
+    content: '';
+    position: absolute;
+    background: var(--p24-gold);
+    transition: transform 0.3s ease;
+}
+
+#pishu24-app .p24-faq-icon::before {
+    top: 50%;
+    left: 4px;
+    right: 4px;
+    height: 1.5px;
+    transform: translateY(-50%);
+}
+
+#pishu24-app .p24-faq-icon::after {
+    left: 50%;
+    top: 4px;
+    bottom: 4px;
+    width: 1.5px;
+    transform: translateX(-50%);
+}
+
+#pishu24-app .p24-faq-item.p24-open .p24-faq-icon::after {
+    transform: translateX(-50%) rotate(90deg);
+    opacity: 0;
+}
+
+#pishu24-app .p24-faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+}
+
+#pishu24-app .p24-faq-item.p24-open .p24-faq-answer {
+    max-height: 600px;
+}
+
+#pishu24-app .p24-faq-answer-inner {
+    padding: 0 4px 28px;
+    color: var(--p24-muted);
+    font-size: 15.5px;
+    line-height: 1.75;
+}
+
+#pishu24-app .p24-faq-answer-inner b {
+    color: var(--p24-navy);
+    font-weight: 600;
+}
+
+/* ─── CTA ──────────────────────────────────────────────────────────── */
+#pishu24-app .p24-cta-bottom {
+    background: var(--p24-navy);
+    background-image:
+        radial-gradient(ellipse at center, rgba(212, 164, 74, 0.1), transparent 60%);
+    color: white;
+    padding: 110px 0;
+    text-align: center;
+    position: relative;
+}
+
+#pishu24-app .p24-cta-bottom::before,
+#pishu24-app .p24-cta-bottom::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 56px;
+    height: 1px;
+    background: var(--p24-gold);
+}
+
+#pishu24-app .p24-cta-bottom::before { top: 60px; }
+#pishu24-app .p24-cta-bottom::after { bottom: 60px; }
+
+#pishu24-app .p24-cta-bottom h2 {
+    font-family: var(--p24-serif);
+    color: white;
+    font-size: clamp(32px, 5vw, 50px);
+    font-weight: 600;
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+}
+
+#pishu24-app .p24-cta-bottom p {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 36px;
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ─── ФУТЕР ────────────────────────────────────────────────────────── */
+#pishu24-app .p24-footer {
+    background: var(--p24-navy-deep);
+    color: rgba(255, 255, 255, 0.65);
+    padding: 72px 0 36px;
+}
+
+#pishu24-app .p24-footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 48px;
+    padding-bottom: 36px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#pishu24-app .p24-footer-brand h3 {
+    font-family: var(--p24-serif);
+    font-size: 24px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 12px;
+}
+
+#pishu24-app .p24-footer-brand p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+#pishu24-app .p24-footer h4 {
+    color: var(--p24-gold);
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+#pishu24-app .p24-footer ul {
+    list-style: none;
+}
+
+#pishu24-app .p24-footer li {
+    margin-bottom: 10px;
+}
+
+#pishu24-app .p24-footer a {
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: none;
+    transition: color 0.2s;
+    font-size: 14.5px;
+}
+
+#pishu24-app .p24-footer a:hover {
+    color: var(--p24-gold);
+}
+
+#pishu24-app .p24-footer-info {
+    text-align: center;
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.02em;
+    line-height: 1.8;
+}
+
+/* ─── АДАПТИВ ──────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    #pishu24-app .p24-section { padding: 64px 0; }
+    #pishu24-app .p24-hero { padding: 72px 0 80px; }
+    #pishu24-app .p24-hero-stats { gap: 32px; margin-top: 48px; padding-top: 32px; }
+    #pishu24-app .p24-footer-grid { grid-template-columns: 1fr; gap: 36px; text-align: center; }
+    #pishu24-app .p24-feature { border-right: none; }
+    #pishu24-app .p24-card p { min-height: auto; }
+    #pishu24-app .p24-cta-bottom { padding: 72px 0; }
+    #pishu24-app .p24-cta-bottom::before { top: 36px; }
+    #pishu24-app .p24-cta-bottom::after { bottom: 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #pishu24-app *,
+    #pishu24-app *::before,
+    #pishu24-app *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+
+<div id="pishu24-app">
+    <!-- ─── HERO ─── -->
+    <section class="p24-hero">
+        <div class="p24-container p24-hero-inner">
+            <div class="p24-logo-mark" aria-label="{{ brand_name }}">
+                <svg viewBox="0 0 32 32" fill="currentColor">
+                    <!-- Академическая шапочка -->
+                    <path d="M16 4 L29 9 L16 14 L3 9 Z"/>
+                    <path d="M7 11 L7 16 Q7 19 16 19 Q25 19 25 16 L25 11" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    <!-- Перо -->
+                    <rect x="14.5" y="19" width="3" height="9" rx="0.5"/>
+                    <path d="M14.5 28 L17.5 28 L16 30.5 Z"/>
+                </svg>
+            </div>
+            <div class="p24-badge">
+                <span class="p24-badge-dot"></span>
+                Принимаем заявки 24/7
+            </div>
+            <h1>Учебные тексты <br><em>под ключ за 24 часа</em></h1>
+            <p class="p24-lead">
+                Консультационные услуги по подготовке курсовых, рефератов, статей и презентаций.
+                Помощь со структурой, редактурой и подбором источников.
+            </p>
+            <div class="p24-cta-group">
+                <a href="https://t.me/{{ bot_username }}" target="_blank" rel="noopener" class="p24-btn p24-btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+                    Открыть Telegram-бот
+                </a>
+                <a href="#p24-how" class="p24-btn p24-btn-ghost">Как это работает →</a>
+            </div>
+            <div class="p24-hero-stats">
+                <div>
+                    <div class="p24-stat-num">7</div>
+                    <div class="p24-stat-label">типов работ</div>
+                </div>
+                <div>
+                    <div class="p24-stat-num">24<span style="font-size: 0.7em;">ч</span></div>
+                    <div class="p24-stat-label">средний срок</div>
+                </div>
+                <div>
+                    <div class="p24-stat-num">100<span style="font-size: 0.7em;">%</span></div>
+                    <div class="p24-stat-label">чек 54-ФЗ</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── СЕРВИСЫ ─── -->
+    <section class="p24-section p24-services">
+        <div class="p24-container">
+            <div class="p24-divider"></div>
+            <h2 class="p24-heading">Услуги</h2>
+            <p class="p24-subheading">
+                Помогаем студентам и преподавателям с подготовкой текстов.
+                Готовые материалы вы используете как образец для самостоятельной работы.
+            </p>
+            <div class="p24-services-grid">
+                <div class="p24-card">
+                    <span class="p24-card-num">— 01</span>
+                    <h3>Курсовые работы</h3>
+                    <p>Структура, теоретическая часть, расчёты, выводы по ГОСТ.</p>
+                    <div class="p24-card-footer">
+                        <span class="p24-card-price">Расчёт в боте</span>
+                        <span class="p24-card-volume">20+ стр.</span>
+                    </div>
+                </div>
+                <div class="p24-card">
+                    <span class="p24-card-num">— 02</span>
+                    <h3>Рефераты</h3>
+                    <p>Краткий обзор темы с актуальными источниками.</p>
+                    <div class="p24-card-footer">
+                        <span class="p24-card-price">Расчёт в боте</span>
+                        <span class="p24-card-volume">10+ стр.</span>
+                    </div>
+                </div>
+                <div class="p24-card">
+                    <span class="p24-card-num">— 03</span>
+                    <h3>Научные статьи</h3>
+                    <p>Аннотация, ключевые слова, список литературы по ГОСТ.</p>
+                    <div class="p24-card-footer">
+                        <span class="p24-card-price">Расчёт в боте</span>
+                        <span class="p24-card-volume">5–8 стр.</span>
+                    </div>
+                </div>
+                <div class="p24-card">
+                    <span class="p24-card-num">— 04</span>
+                    <h3>Конспекты</h3>
+                    <p>Конспект лекции, вебинара или семинара по тезисам.</p>
+                    <div class="p24-card-footer">
+                        <span class="p24-card-price">Расчёт в боте</span>
+                        <span class="p24-card-volume">любой объём</span>
+                    </div>
+                </div>
+                <div class="p24-card">
+                    <span class="p24-card-num">— 05</span>
+                    <h3>Презентации</h3>
+                    <p>Структура слайдов, тезисы, оформление.</p>
+                    <div class="p24-card-footer">
+                        <span class="p24-card-price">Расчёт в боте</span>
+                        <span class="p24-card-volume">10–20 слайдов</span>
+                    </div>
+                </div>
+                <div class="p24-card">
+                    <span class="p24-card-num">— 06</span>
+                    <h3>Домашние задания</h3>
+                    <p>Помощь с решением задач и упражнений с пояснениями.</p>
+                    <div class="p24-card-footer">
+                        <span class="p24-card-price">Расчёт в боте</span>
+                        <span class="p24-card-volume">за работу</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── ШАГИ ─── -->
+    <section id="p24-how" class="p24-section p24-how">
+        <div class="p24-container">
+            <div class="p24-divider"></div>
+            <h2 class="p24-heading">Как заказать</h2>
+            <p class="p24-subheading">Пять шагов от заявки до получения готового документа</p>
+            <div class="p24-steps">
+                <div class="p24-step">
+                    <h4>Откройте бот</h4>
+                    <p>Нажмите кнопку — перейдёте в Telegram к @{{ bot_username }}</p>
+                </div>
+                <div class="p24-step">
+                    <h4>Заполните бриф</h4>
+                    <p>Тип работы, тема, объём, дедлайн — две минуты</p>
+                </div>
+                <div class="p24-step">
+                    <h4>Получите цену</h4>
+                    <p>Оценка заказа и стоимость придут в течение 1–24 часов</p>
+                </div>
+                <div class="p24-step">
+                    <h4>Превью и оплата</h4>
+                    <p>PDF с водяным знаком для проверки. Безопасная оплата (Робокасса / СБП)</p>
+                </div>
+                <div class="p24-step">
+                    <h4>Получите .docx</h4>
+                    <p>Чистый файл сразу после оплаты + чек на email</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── ПОЧЕМУ МЫ ─── -->
+    <section class="p24-section p24-why">
+        <div class="p24-container">
+            <div class="p24-divider"></div>
+            <h2 class="p24-heading">Почему нам можно доверять</h2>
+            <p class="p24-subheading">Прозрачно, законно и удобно — оплата только через банк-эквайер</p>
+            <div class="p24-why-grid">
+                <div class="p24-feature">
+                    <div class="p24-feature-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 1l3.09 6.26L22 8.27l-5 4.87 1.18 6.88L12 16.77l-6.18 3.25L7 13.14 2 8.27l6.91-1.01L12 1z"/></svg>
+                    </div>
+                    <h5>Безопасная оплата (Робокасса / СБП)</h5>
+                    <p>Оплата банковской картой или по СБП. Данные карты защищены платёжным шлюзом.</p>
+                </div>
+                <div class="p24-feature">
+                    <div class="p24-feature-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
+                    <h5>Чеки 54-ФЗ на email</h5>
+                    <p>После оплаты автоматически приходит чек через «Мой налог».</p>
+                </div>
+                <div class="p24-feature">
+                    <div class="p24-feature-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </div>
+                    <h5>Превью до оплаты</h5>
+                    <p>PDF с водяным знаком — оплачиваете, только если устраивает.</p>
+                </div>
+                <div class="p24-feature">
+                    <div class="p24-feature-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    </div>
+                    <h5>Срочные заказы</h5>
+                    <p>Реферат за 6 часов, курсовая за 24 часа — возможно.</p>
+                </div>
+                <div class="p24-feature">
+                    <div class="p24-feature-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                    </div>
+                    <h5>Поддержка 24/7</h5>
+                    <p>Вопросы в боте — отвечаем в течение часа в дневное время.</p>
+                </div>
+                <div class="p24-feature">
+                    <div class="p24-feature-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <h5>Официальная работа</h5>
+                    <p>Работаем легально по публичной оферте, всё прозрачно.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── РЕФЕРАЛЫ ─── -->
+    <section class="p24-refer">
+        <div class="p24-container">
+            <div class="p24-refer-inner">
+                <div class="p24-refer-mark">— Реферальная программа</div>
+                <h2>Приглашайте друзей <br>и зарабатывайте</h2>
+                <p>Делитесь своей реферальной ссылкой из бота и получайте бонусы с каждого их заказа.</p>
+            </div>
+            <div class="p24-refer-cards">
+                <div class="p24-refer-card">
+                    <div class="p24-refer-amount">Бонус</div>
+                    <p>Фиксированное вознаграждение за первый оплаченный заказ друга</p>
+                </div>
+                <div class="p24-refer-card">
+                    <div class="p24-refer-amount">Кэшбэк %</div>
+                    <p>Процент с каждого следующего заказа приглашённого человека</p>
+                </div>
+                <div class="p24-refer-card">
+                    <div class="p24-refer-amount">Выплата</div>
+                    <p>Вывод накопленного баланса на банковскую карту прямо из бота</p>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <a href="https://t.me/{{ bot_username }}" target="_blank" rel="noopener" class="p24-btn p24-btn-dark">
+                    Получить реферальную ссылку →
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── FAQ ─── -->
+    <section class="p24-section p24-faq">
+        <div class="p24-container">
+            <div class="p24-divider"></div>
+            <h2 class="p24-heading">Частые вопросы</h2>
+            <p class="p24-subheading">Если не нашли ответ — задайте вопрос в боте</p>
+            <div class="p24-faq-list">
+                <div class="p24-faq-item">
+                    <button class="p24-faq-question">
+                        <span>Это законно?</span>
+                        <span class="p24-faq-icon"></span>
+                    </button>
+                    <div class="p24-faq-answer">
+                        <div class="p24-faq-answer-inner">
+                            Да. Мы оказываем <b>консультационные услуги</b> в сфере подготовки учебных и научных текстов — это законно и регулируется ГК РФ. Самозанятость оформлена в ФНС, чеки автоматически передаются в налоговую через «Мой налог». Заказчик использует материалы как образец для самостоятельной работы и сам несёт ответственность за академическую добросовестность согласно 273-ФЗ «Об образовании».
+                        </div>
+                    </div>
+                </div>
+                <div class="p24-faq-item">
+                    <button class="p24-faq-question">
+                        <span>Как происходит оплата?</span>
+                        <span class="p24-faq-icon"></span>
+                    </button>
+                    <div class="p24-faq-answer">
+                        <div class="p24-faq-answer-inner">
+                            После согласования заказа и просмотра превью с водяным знаком мы присылаем в бот ссылку на оплату через Робокассу (карты, СБП). Принимаем: банковские карты, СБП, ЮMoney. После успешной оплаты сразу приходит чистый .docx-файл и чек на email.
+                        </div>
+                    </div>
+                </div>
+                <div class="p24-faq-item">
+                    <button class="p24-faq-question">
+                        <span>Что если работа мне не подойдёт?</span>
+                        <span class="p24-faq-icon"></span>
+                    </button>
+                    <div class="p24-faq-answer">
+                        <div class="p24-faq-answer-inner">
+                            До оплаты вы получаете PDF-превью с водяным знаком — можно оценить структуру, объём, качество. Если что-то не нравится, можно либо отказаться (без оплаты), либо попросить доработать. После оплаты — две правки в течение 3 дней бесплатно.
+                        </div>
+                    </div>
+                </div>
+                <div class="p24-faq-item">
+                    <button class="p24-faq-question">
+                        <span>Сколько займёт по времени?</span>
+                        <span class="p24-faq-icon"></span>
+                    </button>
+                    <div class="p24-faq-answer">
+                        <div class="p24-faq-answer-inner">
+                            Зависит от типа: реферат — от 6 часов, курсовая — от 24 часов, статья — от 12 часов. Срочные заказы возможны, но дороже. Точный срок оговариваем перед стартом работы.
+                        </div>
+                    </div>
+                </div>
+                <div class="p24-faq-item">
+                    <button class="p24-faq-question">
+                        <span>Можно прислать свой шаблон или методичку?</span>
+                        <span class="p24-faq-icon"></span>
+                    </button>
+                    <div class="p24-faq-answer">
+                        <div class="p24-faq-answer-inner">
+                            Конечно, и это даже желательно. В боте есть шаг с прикреплением файла — можно загрузить методичку, образец оформления, требования вуза. Мы будем ориентироваться на ваши материалы.
+                        </div>
+                    </div>
+                </div>
+                <div class="p24-faq-item">
+                    <button class="p24-faq-question">
+                        <span>А если у меня нестандартная тема?</span>
+                        <span class="p24-faq-icon"></span>
+                    </button>
+                    <div class="p24-faq-answer">
+                        <div class="p24-faq-answer-inner">
+                            Напишите тему в боте — оценим. Берёмся за гуманитарные, экономические, технические темы. Если тема слишком узкая или требует специфической базы (медицина, юриспруденция в части судебной практики) — честно скажем сразу.
+                        </div>
+                    </div>
+                </div>
+                <div class="p24-faq-item">
+                    <button class="p24-faq-question">
+                        <span>Будет ли уникальность?</span>
+                        <span class="p24-faq-icon"></span>
+                    </button>
+                    <div class="p24-faq-answer">
+                        <div class="p24-faq-answer-inner">
+                            Тексты пишем индивидуально под каждый заказ. Источники обязательно цитируются. По запросу можем проверить через антиплагиат и приложить отчёт. Финальная уникальность также зависит от того, как вы доработаете материал самостоятельно.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── CTA ─── -->
+    <section class="p24-cta-bottom">
+        <div class="p24-container">
+            <h2>Готовы начать?</h2>
+            <p>Заходите в Telegram-бот — это займёт меньше пяти минут</p>
+            <a href="https://t.me/{{ bot_username }}" target="_blank" rel="noopener" class="p24-btn p24-btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+                Открыть @{{ bot_username }}
+            </a>
+        </div>
+    </section>
+
+    <!-- ─── ФУТЕР ─── -->
+    <footer class="p24-footer">
+        <div class="p24-container">
+            <div class="p24-footer-grid">
+                <div class="p24-footer-brand">
+                    <h3>{{ brand_name }}</h3>
+                    <p>
+                        Консультационные услуги по подготовке учебных и научных текстов.
+                        Официальная оплата с автоматическим формированием чеков.
+                    </p>
+                </div>
+                <div>
+                    <h4>Документы</h4>
+                    <ul>
+                        <li><a href="/oferta">Публичная оферта</a></li>
+                        <li><a href="/privacy">Политика конфиденциальности</a></li>
+                        <li><a href="/contacts">Контакты</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Связь</h4>
+                    <ul>
+                        <li><a href="https://t.me/{{ bot_username }}" target="_blank" rel="noopener">Telegram-бот</a></li>
+                        <li><a href="mailto:{{ support_email }}">{{ support_email }}</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="p24-footer-info">
+                © 2026 {{ brand_name }}. Все услуги предоставляются на основании договора публичной оферты.
+            </div>
+        </div>
+    </footer>
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    function init() {
+        var app = document.getElementById('pishu24-app');
+        if (!app) return;
+
+        // FAQ аккордеон
+        var faqItems = app.querySelectorAll('.p24-faq-item');
+        faqItems.forEach(function(item) {
+            var btn = item.querySelector('.p24-faq-question');
+            if (!btn) return;
+            btn.addEventListener('click', function() {
+                var wasOpen = item.classList.contains('p24-open');
+                faqItems.forEach(function(i) { i.classList.remove('p24-open'); });
+                if (!wasOpen) item.classList.add('p24-open');
+            });
+        });
+
+        // Появление карточек при скролле
+        if ('IntersectionObserver' in window) {
+            var cards = app.querySelectorAll('.p24-card');
+            var obs = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry, idx) {
+                    if (entry.isIntersecting) {
+                        setTimeout(function() {
+                            entry.target.classList.add('p24-visible');
+                        }, idx * 80);
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+            cards.forEach(function(c) { obs.observe(c); });
+        } else {
+            app.querySelectorAll('.p24-card').forEach(function(c) {
+                c.classList.add('p24-visible');
+            });
+        }
+
+        // Плавный скролл
+        app.querySelectorAll('a[href^="#"]').forEach(function(a) {
+            a.addEventListener('click', function(e) {
+                var id = a.getAttribute('href');
+                if (id.length < 2) return;
+                var t = document.querySelector(id);
+                if (t) {
+                    e.preventDefault();
+                    t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+</script>
+
+</body>
+</html>

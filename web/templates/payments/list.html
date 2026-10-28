@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Платежи · {{ brand_name }}{% endblock %}
+
+{% block content %}
+
+<div class="bg-white rounded-lg border border-slate-200 shadow-card p-4 mb-6">
+    <div class="flex flex-wrap gap-2">
+        {% set ps = [(None, 'Все', 'navy'), ('paid', 'Оплачены', 'emerald'), ('pending', 'Ожидают', 'amber'), ('refunded', 'Возвращены', 'rose')] %}
+        {% for v, l, c in ps %}
+        <a href="/admin/payments{% if v %}?status={{ v }}{% endif %}"
+           class="px-3 py-1.5 rounded-full text-xs font-medium transition-colors
+                  {% if status == v %}bg-{{ c }}-600 text-white{% else %}bg-{{ c }}-50 text-{{ c }}-700 hover:bg-{{ c }}-100{% endif %}">
+            {{ l }}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% if payments %}
+<div class="bg-white rounded-lg border border-slate-200 shadow-card overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm table-zebra">
+            <thead class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+                <tr>
+                    <th class="text-left px-4 py-3 font-medium">#</th>
+                    <th class="text-left px-4 py-3 font-medium">Заказ</th>
+                    <th class="text-left px-4 py-3 font-medium">Студент</th>
+                    <th class="text-left px-4 py-3 font-medium">Payment ID</th>
+                    <th class="text-left px-4 py-3 font-medium">Статус</th>
+                    <th class="text-right px-4 py-3 font-medium">Сумма</th>
+                    <th class="text-left px-4 py-3 font-medium">Создан</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in payments %}
+                <tr class="border-t border-slate-100 hover:bg-cream/40 transition-colors">
+                    <td class="px-4 py-3 font-mono text-xs text-slate-400">#{{ p.id }}</td>
+                    <td class="px-4 py-3">
+                        {% if p.order %}<a href="/admin/orders/{{ p.order.id }}" class="text-navy hover:text-gold-dark font-medium">#{{ p.order.id }}</a>{% else %}—{% endif %}
+                    </td>
+                    <td class="px-4 py-3">
+                        {% if p.order and p.order.user %}
+                        <a href="/admin/users/{{ p.order.user.tg_id }}" class="text-sm text-slate-700 hover:text-navy">
+                            {% if p.order.user.username %}@{{ p.order.user.username }}{% else %}{{ p.order.user.full_name or 'id' ~ p.order.user.tg_id }}{% endif %}
+                        </a>
+                        {% else %}<span class="text-slate-300">—</span>{% endif %}
+                    </td>
+                    <td class="px-4 py-3 text-xs font-mono text-slate-500 max-w-xs truncate">{{ p.payment_id or '—' }}</td>
+                    <td class="px-4 py-3">
+                        {% set sc = {'paid':'emerald','pending':'amber','refunded':'rose'}.get(p.status, 'slate') %}
+                        <span class="inline-block px-2 py-0.5 rounded text-xs bg-{{ sc }}-100 text-{{ sc }}-700">{{ p.status }}</span>
+                    </td>
+                    <td class="px-4 py-3 text-right font-mono text-sm font-medium text-navy">{{ "%.0f ₽"|format(p.amount) }}</td>
+                    <td class="px-4 py-3 text-xs text-slate-500 whitespace-nowrap">{{ p.created_at.strftime('%d.%m.%Y %H:%M') if p.created_at else '—' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if total_pages > 1 %}
+    <div class="flex items-center justify-between px-4 py-3 border-t border-slate-100 bg-slate-50/50">
+        <div class="text-xs text-slate-500">Стр. {{ page }} из {{ total_pages }}</div>
+        <div class="flex gap-1">
+            {% set base = '/admin/payments?' ~ ('status=' ~ status ~ '&' if status else '') %}
+            {% if page > 1 %}<a href="{{ base }}page={{ page-1 }}" class="px-3 py-1.5 text-xs border border-slate-200 rounded-md hover:bg-white">← Назад</a>{% endif %}
+            {% if page < total_pages %}<a href="{{ base }}page={{ page+1 }}" class="px-3 py-1.5 text-xs border border-slate-200 rounded-md hover:bg-white">Вперёд →</a>{% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% else %}
+<div class="bg-white rounded-lg border border-slate-200 shadow-card p-12 text-center">
+    <i data-lucide="credit-card" class="w-10 h-10 mx-auto text-slate-300 mb-3"></i>
+    <p class="text-slate-500">Платежей не найдено</p>
+</div>
+{% endif %}
+
+{% endblock %}

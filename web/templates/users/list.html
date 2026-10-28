@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Пользователи · {{ brand_name }}{% endblock %}
+
+{% block content %}
+
+<div class="bg-white rounded-lg border border-slate-200 shadow-card p-4 mb-6">
+    <form method="get" action="/admin/users" class="flex gap-2 mb-3">
+        {% if role %}<input type="hidden" name="role" value="{{ role }}">{% endif %}
+        <div class="relative flex-1">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" name="q" value="{{ q }}" placeholder="Имя, @username, email или tg_id…"
+                   class="w-full pl-10 pr-4 py-2 text-sm border border-slate-200 rounded-md focus:border-gold focus:outline-none transition-colors">
+        </div>
+        <button type="submit" class="px-4 py-2 text-sm bg-navy text-white rounded-md hover:bg-navy-light transition-colors cursor-pointer">Искать</button>
+        {% if q or role %}<a href="/admin/users" class="px-3 py-2 text-sm text-slate-500 hover:text-navy border border-slate-200 rounded-md">Сброс</a>{% endif %}
+    </form>
+
+    <div class="flex flex-wrap gap-2">
+        {% set roles = [(None, 'Все', 'navy'), ('student', 'Студенты', 'sky'), ('editor', 'Редакторы', 'emerald'), ('admin', 'Админы', 'amber')] %}
+        {% for r_val, r_label, r_color in roles %}
+        <a href="/admin/users{% if r_val %}?role={{ r_val }}{% endif %}{% if q %}{{ '&' if r_val else '?' }}q={{ q }}{% endif %}"
+           class="px-3 py-1.5 rounded-full text-xs font-medium transition-colors
+                  {% if role == r_val %}bg-navy text-white{% else %}bg-slate-100 text-slate-600 hover:bg-slate-200{% endif %}">
+            {{ r_label }}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% if users %}
+<div class="bg-white rounded-lg border border-slate-200 shadow-card overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm table-zebra">
+            <thead class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+                <tr>
+                    <th class="text-left px-4 py-3 font-medium">Имя</th>
+                    <th class="text-left px-4 py-3 font-medium">Username</th>
+                    <th class="text-left px-4 py-3 font-medium">TG ID</th>
+                    <th class="text-left px-4 py-3 font-medium">Роль</th>
+                    <th class="text-right px-4 py-3 font-medium">Заказов</th>
+                    <th class="text-right px-4 py-3 font-medium">Реф-баланс</th>
+                    <th class="text-left px-4 py-3 font-medium">Регистрация</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr class="border-t border-slate-100 hover:bg-cream/40 transition-colors">
+                    <td class="px-4 py-3">
+                        <a href="/admin/users/{{ u.tg_id }}" class="text-navy font-medium hover:text-gold-dark transition-colors">
+                            {{ u.full_name or '—' }}
+                        </a>
+                        {% if u.is_banned %}<span class="ml-2 px-1.5 py-0.5 rounded text-[10px] bg-rose-100 text-rose-700">BAN</span>{% endif %}
+                    </td>
+                    <td class="px-4 py-3 text-sm">{% if u.username %}<span class="text-slate-600">@{{ u.username }}</span>{% else %}<span class="text-slate-300">—</span>{% endif %}</td>
+                    <td class="px-4 py-3 text-xs font-mono text-slate-500">{{ u.tg_id }}</td>
+                    <td class="px-4 py-3">
+                        {% set role_val = u.role.value if u.role.__class__.__name__ == 'UserRole' else u.role %}
+                        {% set role_meta = {'student':('sky','Студент'),'admin':('amber','Админ'),'editor':('emerald','Редактор')}.get(role_val, ('slate', role_val)) %}
+                        <span class="inline-block px-2 py-0.5 rounded text-xs bg-{{ role_meta[0] }}-50 text-{{ role_meta[0] }}-700">{{ role_meta[1] }}</span>
+                    </td>
+                    <td class="px-4 py-3 text-right font-mono text-sm">{{ orders_count.get(u.id, 0) }}</td>
+                    <td class="px-4 py-3 text-right font-mono text-sm {% if u.ref_balance > 0 %}text-gold-dark font-medium{% else %}text-slate-300{% endif %}">
+                        {{ "%.0f ₽"|format(u.ref_balance) }}
+                    </td>
+                    <td class="px-4 py-3 text-xs text-slate-500 whitespace-nowrap">{{ u.created_at.strftime('%d.%m.%Y') if u.created_at else '—' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if total_pages > 1 %}
+    <div class="flex items-center justify-between px-4 py-3 border-t border-slate-100 bg-slate-50/50">
+        <div class="text-xs text-slate-500">Стр. {{ page }} из {{ total_pages }}</div>
+        <div class="flex gap-1">
+            {% set base = '/admin/users?' ~ ('role=' ~ role ~ '&' if role else '') ~ ('q=' ~ q ~ '&' if q else '') %}
+            {% if page > 1 %}<a href="{{ base }}page={{ page-1 }}" class="px-3 py-1.5 text-xs border border-slate-200 rounded-md hover:bg-white">← Назад</a>{% endif %}
+            {% if page < total_pages %}<a href="{{ base }}page={{ page+1 }}" class="px-3 py-1.5 text-xs border border-slate-200 rounded-md hover:bg-white">Вперёд →</a>{% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% else %}
+<div class="bg-white rounded-lg border border-slate-200 shadow-card p-12 text-center">
+    <i data-lucide="users" class="w-10 h-10 mx-auto text-slate-300 mb-3"></i>
+    <p class="text-slate-500">Пользователи не найдены</p>
+</div>
+{% endif %}
+
+{% endblock %}

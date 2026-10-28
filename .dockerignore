@@ -1,0 +1,15 @@
+.git
+.gitignore
+.env
+*.db
+data/
+uploads/
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+.idea/
+.vscode/
+.claude/
+.DS_Store
+tests/

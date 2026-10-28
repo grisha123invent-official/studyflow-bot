@@ -1,0 +1,12 @@
+{% extends "editor/base.html" %}
+{% block title %}Задание недоступно · {{ brand_name }}{% endblock %}
+{% block content %}
+<div class="bg-white rounded-lg border border-slate-200 shadow-card p-12 text-center max-w-lg mx-auto">
+    <i data-lucide="search-x" class="w-10 h-10 mx-auto text-slate-300 mb-3"></i>
+    <h3 class="font-serif text-2xl text-navy mb-1">Задание #{{ order_id }} недоступно</h3>
+    <p class="text-sm text-slate-500 mb-6">Возможно, оно завершено, отменено или ещё не передано редактору.</p>
+    <a href="/editor/tasks" class="inline-flex items-center gap-2 px-4 py-2 text-sm bg-navy text-white rounded-md hover:bg-navy-light">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> К заданиям
+    </a>
+</div>
+{% endblock %}
